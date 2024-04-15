@@ -1,0 +1,2 @@
+# Enforce \n (UNIX) line endings cause fuck \r\n (Windows)
+* text=auto eol=lf

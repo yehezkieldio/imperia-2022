@@ -1,0 +1,38 @@
+name: GitHub Actions
+on: [push]
+jobs:
+    lint-code:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: "17"
+                  cache: "yarn"
+            - run: yarn install
+            - run: yarn run check:lint
+    format-code:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: "17"
+                  cache: "yarn"
+            - run: yarn install
+            - run: yarn run check:format
+    compile-and-test-code:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: "17"
+                  cache: "yarn"
+            - run: yarn install
+            - run: yarn run prisma:generate
+            - run: yarn run compile && yarn run start:development
+              env:
+                  DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+                  CI_TEST: ${{ secrets.CI_TEST }}
+                  DATABASE_URL: ${{ secrets.DATABASE_URL }}

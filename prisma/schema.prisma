@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Guild {
+  guildId String @id @map("guild_id")
+  configuration GuildConfiguration?
+  telemetry     GuildTelemetry?
+  @@map("guild")
+}
+
+model GuildConfiguration {
+  guildId String @id @map("guild_id")
+  prefix   String @default("imp!") @map("prefix")
+  language String @default("en-US") @map("language")
+  guild Guild @relation(fields: [guildId], references: [guildId])
+  @@map("guild_configuration")
+}
+
+model GuildTelemetry {
+  guildId String @id @map("guild_id")
+  registeredAt            DateTime @default(now()) @map("registed_at")
+  totalGlobalCommandsUsed Int      @default(0) @map("commands_used")
+  commands CommandTelemetry[]
+  guild                   Guild    @relation(fields: [guildId], references: [guildId])
+  @@map("guild_telemetry")
+}
+
+model User {
+  userId String @id @map("user_id")
+  telemetry UserTelemetry?
+  cafe UserCafe?
+  @@map("user")
+}
+
+model UserCafe {
+    cafeId String @id @map("cafe_id")
+    cafeName String @map("cafe_name")
+    
+    userId String @map("user_id")
+    user User @relation(fields: [cafeId], references: [userId])
+    @@map("user_cafe")
+}
+
+model UserTelemetry {
+  userId String @id @map("user_id")
+  lastCommandUsed   String?
+  totalCommandsUsed Int      @default(0) @map("commands_used")
+  registeredAt      DateTime @default(now()) @map("registed_at")
+  user User @relation(fields: [userId], references: [userId])
+  @@map("user_telemetry")
+}
+
+model CommandTelemetry {
+  commandId   String @id @map("command_id")
+  commandUsed Int    @default(0) @map("command_used")
+  guildId String        @map("guild_id")
+  guild   GuildTelemetry @relation(fields: [guildId], references: [guildId])
+  executedAt DateTime @default(now()) @map("executed_at")
+  @@map("command_telemetry")
+}

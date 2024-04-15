@@ -1,0 +1,17 @@
+dist/
+node_modules/
+data/
+prisma/**/migrations/
+
+prisma/migrations/
+dev.db
+dev.db-journal
+.env
+
+.yarn/*
+.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -1,0 +1,4 @@
+prisma
+dist
+
+src/locales/crowdin.yml
